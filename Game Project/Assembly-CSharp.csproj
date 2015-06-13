@@ -50,6 +50,7 @@
      <Compile Include="Assets\Interaction.cs" />
      <Compile Include="Assets\IrisDoor.cs" />
      <Compile Include="Assets\Player\Player.cs" />
+     <Compile Include="Assets\Player\PlayerTpCam.cs" />
      <Compile Include="Assets\Script Templates\Circle.cs" />
      <Compile Include="Assets\Script Templates\Iris.cs" />
      <None Include="Assets\Materials\BlurPass.shader" />

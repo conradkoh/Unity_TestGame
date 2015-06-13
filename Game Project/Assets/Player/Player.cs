@@ -1,29 +1,39 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+[RequireComponent(typeof(CharacterController))]
 public class Player : MonoBehaviour {
 	public Camera fpCamera;
 	public Camera tpCamera;
 	public float movementSpeed = 30;
-	public float mouseSensitivity = 2;
+	public float mouseSensitivity = 5;
 	public float gravity = 10.0f;
+	public float jumpHeight = 15.0f;
+	public Vector3 camPosition = new Vector3(10, 70, 10);
 
 	private enum CONTROLS{ FP, TP};
 	private CONTROLS controlMode = CONTROLS.FP;
+	private Vector3 displacement = new Vector3(0, 0, 0);
+	//First Person Variables
 	private float verticalAngle = 0;
-	private float angleLimit = 80.0f;
+	private float angleLimit = 70.0f;
 	private float verticalDisplacement = 0;
 	private RaycastHit rayHit;
+	private float verticalVelocity = 0;
+	private CharacterController controller;
+	//Third Person Variables
+	bool test = true;
 
 
 	// Use this for initialization
 	void Start () {
-		InitializeControlMode();
+		Initialize();
 	}
 
 	// Update is called once per frame
 	void Update () {
 		HandleUserControls(controlMode);
+		SetGravityFactoredVerticalVelocity();
+		MoveCharacterController();
 	}
 
 	void HandleUserControls(CONTROLS control){
@@ -37,11 +47,10 @@ public class Player : MonoBehaviour {
 
 	#region First Person Methods
 	void HandleFirstPersonControls(){
-		CharacterController control = GetComponent<CharacterController>();
 		GameObject go = GetObjectFromCrossHair();
-		HandleInteraction(go);
-		HandleFPMouseControls(control);
-		HandleFPKeyboardControls(control);
+		HandleFPInteraction(go);
+		HandleFPMouseControls();
+		HandleFPKeyboardControls();
 	}
 
 	GameObject GetObjectFromCrossHair(){
@@ -55,7 +64,7 @@ public class Player : MonoBehaviour {
 		return foundObject;
 	}
 
-	void HandleInteraction(GameObject go){
+	void HandleFPInteraction(GameObject go){
 		if(Input.GetKeyDown("e") && go!= null){
 			IInteraction interaction = go.GetComponent<IInteraction>();
 			if(interaction != null){
@@ -66,7 +75,7 @@ public class Player : MonoBehaviour {
 			}
 		}
 	}
-	void HandleFPMouseControls(CharacterController controller){
+	void HandleFPMouseControls(){
 		
 		float lrRotation = Input.GetAxis("Mouse X") * mouseSensitivity;
 		verticalAngle -= Input.GetAxis("Mouse Y") * mouseSensitivity;
@@ -77,24 +86,41 @@ public class Player : MonoBehaviour {
 		fpCamera.transform.localRotation = Quaternion.Euler(verticalAngle, 0, 0);
 	}
 
-	void HandleFPKeyboardControls(CharacterController controller){
-
+	void HandleFPKeyboardControls(){
 		float forwardDisplacement = Input.GetAxis("Vertical") * movementSpeed;
 		float sidewayDisplacement = Input.GetAxis("Horizontal") * movementSpeed;
+		float jumpBurst = 0;
+
 		if(Input.GetKey(KeyCode.Space) && controller.isGrounded){
 
-			verticalDisplacement = 0;
-			verticalDisplacement += 10;
+			if(controller.isGrounded){
+				Debug.Log("Captured: " + transform.position.y);
+				verticalVelocity = jumpHeight;
+				jumpBurst = 3.0f * jumpHeight - gravity;
+			}
+			else{
+				if(test){
+					Debug.Log("invalid capt : " + transform.position.y);
+				}
+				//Debug.Log ("char not grounded");
+			}
+			//verticalDisplacement -= gravity * Time.deltaTime;
+			//Vector3 displacement = new Vector3(sidewayDisplacement, verticalDisplacement + verticalVelocity, forwardDisplacement);
+
+
+			//verticalVelocity -= gravity;
 		}
-		verticalDisplacement -= gravity * Time.deltaTime;
-		Vector3 displacement = new Vector3(sidewayDisplacement, verticalDisplacement, forwardDisplacement);
-		displacement = transform.rotation * displacement;
-		controller.Move(displacement * Time.deltaTime);
+
+
 
 		if(Input.GetKeyDown("y")){
 			ToggleControlMode();
 		}
-//		if(Input.GetKeyDown("e")){
+
+		displacement = new Vector3(sidewayDisplacement, (verticalVelocity + jumpBurst), forwardDisplacement);
+		displacement = transform.rotation * displacement;
+		Debug.Log(verticalVelocity);
+	//		if(Input.GetKeyDown("e")){
 //			GameObject go = GameObject.Find("Iris Door");
 //			IrisDoor door = go.GetComponent<IrisDoor>();
 //			door.ToggleDoorStatus();
@@ -106,13 +132,27 @@ public class Player : MonoBehaviour {
 	#region Third Person Methods
 
 	void HandleThirdPersonControls(){
-		if(Input.GetKeyDown("y")){
-			ToggleControlMode();
-		}
+//		if(Input.GetKeyDown("y")){
+//			ToggleControlMode();
+//		}
+		CameraFollowPlayer();
+		GameObject go = GetObjectFromCrossHair();
+		HandleFPInteraction(go);
+		HandleFPMouseControls();
+		HandleFPKeyboardControls();
+	}
+
+	void CameraFollowPlayer(){
+		tpCamera.transform.position = new Vector3(transform.position.x + camPosition.x, transform.position.y + camPosition.y, transform.position.z + camPosition.z);
+		tpCamera.transform.LookAt(transform.position);
 	}
 	#endregion
 
 	#region General Low Level Methods
+	void Initialize(){
+		InitializeControlMode();
+		InitializeCharacterController();
+	}
 	void InitializeControlMode(){
 		if(controlMode == CONTROLS.FP){
 			SetControlMode(CONTROLS.FP);
@@ -121,6 +161,10 @@ public class Player : MonoBehaviour {
 		else if(controlMode == CONTROLS.TP){
 			SetControlMode(CONTROLS.FP);
 		}
+	}
+
+	void InitializeCharacterController(){
+		controller = GetComponent<CharacterController>();
 	}
 	void ToggleControlMode(){
 		if(controlMode == CONTROLS.FP){
@@ -149,6 +193,19 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+	void MoveCharacterController(){
+		controller.Move(displacement * Time.deltaTime);
+		displacement = new Vector3 (0, 0, 0);
+	}
 
+	#endregion
+
+	#region Computations
+
+	void SetGravityFactoredVerticalVelocity(){
+		if(!controller.isGrounded){
+			verticalVelocity -= gravity * Time.deltaTime;
+		}
+	}
 	#endregion
 }

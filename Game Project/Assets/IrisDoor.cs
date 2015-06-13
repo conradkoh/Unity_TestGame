@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [ExecuteInEditMode]
 [RequireComponent(typeof(MeshFilter))]
@@ -20,6 +21,7 @@ public class IrisDoor : MonoBehaviour, IInteraction	{
 	private float currentInnerRadius;
 	private float currentOuterRadius;
 	private float outerRadius;
+	public IrisDoor linkedDoor;
 //	private int additionalVertices = 0;
 
 
@@ -74,6 +76,9 @@ public class IrisDoor : MonoBehaviour, IInteraction	{
 	public void Interact ()
 	{
 		ToggleDoorStatus();
+		if(linkedDoor != null){
+			linkedDoor.Interact();
+		}
 		//base.Interact ();
 	}
 	public void ToggleDoorStatus(){
@@ -131,6 +136,10 @@ public class IrisDoor : MonoBehaviour, IInteraction	{
 		//		Debug.Log ("Phase: " + currentPhase);
 	}
 	#endregion
+
+
+
+
 	#region BuildMesh
 	void BuildMesh(int numVerts, float inner_radius, float outer_radius){
 		numVerts = (numVerts/2 * 2);
@@ -221,6 +230,13 @@ public class IrisDoor : MonoBehaviour, IInteraction	{
 		
 		
 		// Create a new Mesh and populate with the data
+
+
+		BuildMeshFromVectors(numVerts, vertices, triangles, normals, uv);
+	}
+
+	
+	void BuildMeshFromVectors(int numberOfVertices, Vector3[] vertices, int[] triangles, Vector3[] normals, Vector2[] uv){
 		Mesh mesh = new Mesh();
 		mesh.vertices = vertices;
 		mesh.triangles = triangles;
@@ -244,8 +260,6 @@ public class IrisDoor : MonoBehaviour, IInteraction	{
 			
 			isFirstInit = false;
 		}
-		
-		
 	}
 	#endregion
 }
