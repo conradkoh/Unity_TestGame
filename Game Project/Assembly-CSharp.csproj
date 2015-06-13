@@ -46,14 +46,15 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Character.cs" />
-     <Compile Include="Assets\Circle.cs" />
-     <Compile Include="Assets\FogTile.cs" />
-     <Compile Include="Assets\Iris.cs" />
+     <Compile Include="Assets\Fog\FogTile.cs" />
+     <Compile Include="Assets\Interaction.cs" />
      <Compile Include="Assets\IrisDoor.cs" />
-     <None Include="Assets\BlurPass.shader" />
+     <Compile Include="Assets\Player\Player.cs" />
+     <Compile Include="Assets\Script Templates\Circle.cs" />
+     <Compile Include="Assets\Script Templates\Iris.cs" />
+     <None Include="Assets\Materials\BlurPass.shader" />
      <None Include="Assets\Materials\Shader.shader" />
-     <None Include="Assets\FogShader.shader" />
+     <None Include="Assets\Materials\FogShader.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>Z:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

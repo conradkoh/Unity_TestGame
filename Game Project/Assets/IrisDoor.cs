@@ -6,28 +6,76 @@ using System.Collections;
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshCollider))]
 
-public class IrisDoor : MonoBehaviour {
-	public int _verticeCount = 30;
-	public float _innerRadius = 0f;
-	public float _outerRadius = 20.0f;
+public class IrisDoor : MonoBehaviour, IInteraction	{
+	public int verticeCount = 30;
+	public float innerRadius = 0f;
+	public float doorFrameSize = 5.0f;
 	public float doorSize = 20.0f;
 	public bool renderOuters = true;
 	public bool irisShape = false;
-	
+	public float doorSpeed = 2.0f;
+	public float minAngle = 0f;
+	public float maxAngle = Mathf.PI;
+	private int currentVerticeCount;
+	private float currentInnerRadius;
+	private float currentOuterRadius;
+	private float outerRadius;
+//	private int additionalVertices = 0;
+
+
 	private Mesh CoreMesh;
 	private bool isFirstInit = true;
 	private float currentPhase = 0;
 	private float phaseVelocity = Mathf.PI * 2 / 1000;
 	private bool isOpen = false;
-	
+//	private bool isAvailable = true;
+	private bool isModified = false;
+	private int currentRadius = 0;
 	void Start () {
-		BuildMesh (_verticeCount, _innerRadius, _outerRadius);
+		Initialize();
+		BuildMesh (verticeCount, innerRadius, outerRadius);
+
 		
 	}
 	void Update(){
-		BuildMesh(_verticeCount, _innerRadius, _outerRadius);
-	}
+		if(isModified){
+			if(isOpen){
+				if(currentInnerRadius < innerRadius){
+					currentInnerRadius += Time.deltaTime * doorSpeed;
+//					additionalVertices = (int) currentInnerRadius * 6;
+				}
+				else{
+					isModified = false;
+				}
+			}
+			if(!isOpen){
+				if(currentInnerRadius > innerRadius){
+					currentInnerRadius -= Time.deltaTime * doorSpeed;
+//					additionalVertices = (int) currentInnerRadius * 6;
+				}
+				else{
+					isModified = false;
+				}
+			}
+			Debug.Log ("Inner : " + currentInnerRadius);
+			Debug.Log ("Outer : " + currentOuterRadius);
+			Debug.Log ("Mod : " + isModified);
+//			currentVerticeCount = verticeCount + additionalVertices;
+			BuildMesh(currentVerticeCount, currentInnerRadius, currentOuterRadius);
+		}
 
+	}
+	void Initialize(){
+		outerRadius = doorSize + doorFrameSize;
+		currentVerticeCount = verticeCount;
+		currentInnerRadius = innerRadius;
+		currentOuterRadius = outerRadius;
+	}
+	public void Interact ()
+	{
+		ToggleDoorStatus();
+		//base.Interact ();
+	}
 	public void ToggleDoorStatus(){
 		if(isOpen){
 			isOpen = false;
@@ -40,13 +88,15 @@ public class IrisDoor : MonoBehaviour {
 	}
 	#region DoorFunctions
 	void OpenDoor(){
-		_innerRadius = doorSize;
-		_outerRadius = doorSize + 2;
+		innerRadius = doorSize - doorFrameSize;
+		outerRadius = doorSize + doorFrameSize;
+		isModified = true;
 	}
 
 	void CloseDoor(){
-		_innerRadius = 0;
-		_outerRadius = doorSize + 2;
+		innerRadius = 0;
+		outerRadius = doorSize + doorFrameSize;
+		isModified = true;
 	}
 
 	#endregion
@@ -57,10 +107,10 @@ public class IrisDoor : MonoBehaviour {
 		float pertubation_z = Mathf.Sin((currentPhase + 0.04f) / 2);
 		//		Debug.Log ("x pertubation: " + pertubation_x);
 		//		Debug.Log("z pertubation: " + pertubation_z);
-		Vector3[] newVerts = new Vector3[_verticeCount];
+		Vector3[] newVerts = new Vector3[verticeCount];
 		Vector3[] currentVerts = CoreMesh.vertices;
 		
-		for(int i = 0; i < _verticeCount; ++i ){
+		for(int i = 0; i < verticeCount; ++i ){
 			Vector3 vertex = currentVerts[i];
 			float x = vertex.x;
 			float y = vertex.y;
@@ -82,7 +132,7 @@ public class IrisDoor : MonoBehaviour {
 	}
 	#endregion
 	#region BuildMesh
-	void BuildMesh(int numVerts, float innerRadius, float outerRadius){
+	void BuildMesh(int numVerts, float inner_radius, float outer_radius){
 		numVerts = (numVerts/2 * 2);
 		
 		//TEST
@@ -102,8 +152,9 @@ public class IrisDoor : MonoBehaviour {
 		float angle = 0;
 		
 		for(int loopc = 0; loopc < numTris; angle += interval , loopc++){
-			float x = Mathf.Sin(angle) * innerRadius;
-			float z = Mathf.Cos (angle) * innerRadius;
+			//spawn half 
+			float x = Mathf.Cos(angle) * inner_radius;
+			float z = Mathf.Sin (angle) * inner_radius;
 			Vector3 vertice = new Vector3(x, 0, z);
 			vertices[verticeIdx] = vertice;
 			
@@ -111,14 +162,14 @@ public class IrisDoor : MonoBehaviour {
 			verticeIdx += 1;
 			
 			if(verticeIdx < numVerts){
-				x = Mathf.Sin (angle + interval/2) * outerRadius;
-				z = Mathf.Cos (angle + interval /2) * outerRadius;
+				x = Mathf.Cos (angle + interval/2) * outer_radius;
+				z = Mathf.Sin (angle + interval /2) * outer_radius;
 				vertice = new Vector3(x, 0, z);
 				vertices[verticeIdx] = vertice;
 				normals[verticeIdx] = Vector3.up;
 				verticeIdx+= 1;
 			}
-			
+
 		}
 		
 		//Draw Triangles
