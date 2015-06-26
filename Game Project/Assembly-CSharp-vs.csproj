@@ -46,16 +46,25 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Fog\FogTile.cs" />
-     <Compile Include="Assets\Interaction.cs" />
-     <Compile Include="Assets\IrisDoor.cs" />
-     <Compile Include="Assets\Player\Player.cs" />
-     <Compile Include="Assets\Player\PlayerTpCam.cs" />
-     <Compile Include="Assets\Script Templates\Circle.cs" />
-     <Compile Include="Assets\Script Templates\Iris.cs" />
+     <Compile Include="Assets\Scripts\Box + Trigger\Box.cs" />
+     <Compile Include="Assets\Scripts\Box + Trigger\BoxTrigger.cs" />
+     <Compile Include="Assets\Scripts\Control Zone\ControlZone.cs" />
+     <Compile Include="Assets\Scripts\Control Zone\ControlZoneActivator.cs" />
+     <Compile Include="Assets\Scripts\Control Zone\FloorIndicatorController.cs" />
+     <Compile Include="Assets\Scripts\Control Zone\Indicator.cs" />
+     <Compile Include="Assets\Scripts\Control Zone\Interface\IControlZone.cs" />
+     <Compile Include="Assets\Scripts\Control Zone\Rotor\Rotor.cs" />
+     <Compile Include="Assets\Scripts\Control Zone\Rotor\RotorCube.cs" />
+     <Compile Include="Assets\Scripts\Interaction.cs" />
+     <Compile Include="Assets\Scripts\IrisDoor.cs" />
+     <Compile Include="Assets\Scripts\Player.cs" />
+     <Compile Include="Assets\Scripts\PlayerTpCam.cs" />
+     <Compile Include="Assets\Scripts\Templates\Circle.cs" />
+     <Compile Include="Assets\Scripts\Templates\FogTile.cs" />
+     <Compile Include="Assets\Scripts\Templates\Iris.cs" />
+     <Compile Include="Assets\Scripts\Templates\TileMap.cs" />
+     <None Include="Assets\Materials\Fog.shader" />
      <None Include="Assets\Materials\BlurPass.shader" />
-     <None Include="Assets\Materials\Shader.shader" />
-     <None Include="Assets\Materials\FogShader.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>Z:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
