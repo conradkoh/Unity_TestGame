@@ -50,21 +50,26 @@
      <Compile Include="Assets\Scripts\Box + Trigger\BoxTrigger.cs" />
      <Compile Include="Assets\Scripts\Control Zone\ControlZone.cs" />
      <Compile Include="Assets\Scripts\Control Zone\ControlZoneActivator.cs" />
-     <Compile Include="Assets\Scripts\Control Zone\FloorIndicatorController.cs" />
-     <Compile Include="Assets\Scripts\Control Zone\Indicator.cs" />
-     <Compile Include="Assets\Scripts\Control Zone\Interface\IControlZone.cs" />
+     <Compile Include="Assets\Scripts\Control Zone\Floor Indicators\FloorIndicatorController.cs" />
+     <Compile Include="Assets\Scripts\Control Zone\Floor Indicators\Indicator.cs" />
      <Compile Include="Assets\Scripts\Control Zone\Rotor\Rotor.cs" />
      <Compile Include="Assets\Scripts\Control Zone\Rotor\RotorCube.cs" />
+     <Compile Include="Assets\Scripts\Control Zone\Text Indicators\TextIndicator.cs" />
+     <Compile Include="Assets\Scripts\Control Zone\Text Indicators\ZoneStatus.cs" />
      <Compile Include="Assets\Scripts\Interaction.cs" />
      <Compile Include="Assets\Scripts\IrisDoor.cs" />
-     <Compile Include="Assets\Scripts\Player.cs" />
+     <Compile Include="Assets\Scripts\Player\Guns\BaseGun.cs" />
+     <Compile Include="Assets\Scripts\Player\Guns\Bullets\BaseBulletCC.cs" />
+     <Compile Include="Assets\Scripts\Player\Guns\Bullets\BaseBulletRB.cs" />
+     <Compile Include="Assets\Scripts\Player\HealthIndicator.cs" />
+     <Compile Include="Assets\Scripts\Player\Player.cs" />
+     <Compile Include="Assets\Scripts\Player\Stats.cs" />
      <Compile Include="Assets\Scripts\PlayerTpCam.cs" />
      <Compile Include="Assets\Scripts\Templates\Circle.cs" />
      <Compile Include="Assets\Scripts\Templates\FogTile.cs" />
      <Compile Include="Assets\Scripts\Templates\Iris.cs" />
      <Compile Include="Assets\Scripts\Templates\TileMap.cs" />
-     <None Include="Assets\Materials\Fog.shader" />
-     <None Include="Assets\Materials\BlurPass.shader" />
+     <None Include="Assets\Materials\3DText\3DTextShader.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>Z:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
@@ -73,9 +78,6 @@
  </Reference>
  <Reference Include="UnityEngine.Analytics">
  <HintPath>Z:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.iOS.Extensions.Xcode">
- <HintPath>Z:/Program Files/Unity/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
